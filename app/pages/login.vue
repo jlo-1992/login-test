@@ -1,38 +1,69 @@
 <script setup lang="ts">
-import * as z from "zod";
-import type { FormSubmitEvent } from "@nuxt/ui";
+import * as z from 'zod'
+import type { FormSubmitEvent } from '@nuxt/ui'
+
+definePageMeta({
+  middleware: ['guest'],
+})
+
+const { fetch } = useUserSession()
 
 const schema = z.object({
-  email: z.email("Invalid email"),
+  email: z.email('Invalid email'),
   password: z
-    .string("Password is required")
-    .min(8, "Must be at least 8 characters"),
-});
+    .string('Password is required')
+    .min(8, 'Must be at least 8 characters'),
+})
 
-type Schema = z.output<typeof schema>;
+const form = useTemplateRef('form')
+type Schema = z.output<typeof schema>
 
 const state = reactive<Partial<Schema>>({
-  email: undefined,
-  password: undefined,
-});
+  email: 'user01@gmail.com',
+  password: '12345678',
+})
 
-const toast = useToast();
+const toast = useToast()
+
 async function onSubmit(event: FormSubmitEvent<Schema>) {
-  toast.add({
-    title: "Success",
-    description: "The form has been submitted.",
-    color: "success",
-  });
-  console.log(event.data);
+  await $fetch('/api/login', {
+    method: 'POST',
+    body: {
+      email: event.data.email,
+      password: event.data.password,
+    },
+  })
+    .then(async () => {
+      await fetch()
+      toast.add({
+        title: 'Success',
+        description: 'The form has been submitted.',
+        color: 'success',
+      })
+
+      await navigateTo('/')
+    })
+    .catch((error) => {
+      console.log(error)
+      form.value?.setErrors([
+        {
+          name: 'email',
+          message: '帳號或密碼錯誤',
+        },
+      ])
+    })
 }
 </script>
 
 <template>
-  <div>
-    <div>登入頁</div>
-    <UButton to="/">回首頁</UButton>
-
-    <UForm :schema="schema" :state="state" class="space-y-4" @submit="onSubmit">
+  <div class="flex h-150 flex-col items-center justify-center gap-y-3">
+    <UForm
+      ref="form"
+      :schema="schema"
+      :state="state"
+      class="space-y-4"
+      @submit="onSubmit"
+    >
       <UFormField label="Email" name="email">
         <UInput v-model="state.email" />
       </UFormField>
@@ -41,7 +72,7 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         <UInput v-model="state.password" type="password" />
       </UFormField>
 
-      <UButton type="submit"> Submit </UButton>
+      <UButton type="submit">Submit</UButton>
     </UForm>
   </div>
 </template>

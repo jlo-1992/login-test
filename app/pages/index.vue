@@ -1,14 +1,12 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+definePageMeta({
+  // layout: false,
+})
+</script>
 
 <template>
-  <div class="p-5 flex flex-col gap-y-3">
+  <div class="flex h-150 flex-col items-center justify-center gap-y-3">
     <div>首頁</div>
-    <div class="flex gap-x-2">
-      <UButton to="/guest-only">訪客專屬頁</UButton>
-      <UButton to="/member-one">會員一</UButton>
-      <UButton to="/member-two">會員二</UButton>
-      <UButton to="/login">登入頁</UButton>
-    </div>
     <ol>
       <li>基礎登入功能</li>
       <li>頁面擋身份，導致首頁或登入頁</li>

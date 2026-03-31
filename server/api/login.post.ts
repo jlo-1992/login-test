@@ -1,11 +1,11 @@
-import { z } from "zod";
-import { getUser, getToken } from "#shared/utils/auth";
+import { z } from 'zod'
+import { getExpiredAt } from '#shared/utils/auth'
+import users from '#shared/data/users.json'
 
 const invalidCredentialsError = createError({
   statusCode: 401,
-  // This message is intentionally vague to prevent user enumeration attacks.
-  message: "Invalid credentials",
-});
+  message: 'Invalid credentials',
+})
 
 export default defineEventHandler(async (event) => {
   const { email, password } = await readValidatedBody(
@@ -14,47 +14,35 @@ export default defineEventHandler(async (event) => {
       email: z.email(),
       password: z.string().min(8),
     }).parse,
-  );
+  )
 
-  // 先 verify 登入資訊
-  if (email !== "user01@gmail.com" || password !== "123456") {
-    throw createError({
-      statusCode: 401,
-      message: "Wrong password",
-    });
+  // 輸入的資訊要符合使用者的
+  const foundUser = users.find(
+    (user) => user.email === email && user.password === password,
+  )
+
+  if (!foundUser) {
+    throw invalidCredentialsError
   }
 
-  // 取得 token
-  const token = await getToken({
-    email,
-    password,
-  })
-    .then((data) => {
-      return data;
-    })
-    .catch(() => {
-      throw invalidCredentialsError;
-    });
+  // 模擬取得 token
+  const token = {
+    access_token: `mock-token-${foundUser.role}`,
+    expires_in: 3600,
+    refresh_token: `mock-refresh-token-${foundUser.role}`,
+  }
 
-  // 再用 token 取得 user 資料
-  const user = await getUser(token.access_token).then((data) => {
-    return {
-      id: data.id,
-      name: data.name,
-      email: data.email,
-    };
-  });
-
+  // 把 user 資料寫入 session
   await setUserSession(event, {
-    user: { ...user },
+    user: { ...foundUser },
     token: {
       accessToken: token.access_token,
-      accessToken_expiredAt: 0,
-      refreshToken: "",
-      refreshToken_expiredAt: 0,
+      accessToken_expiredAt: getExpiredAt(token.expires_in),
+      refreshToken: token.refresh_token,
+      refreshToken_expiredAt: getExpiredAt(token.expires_in * 2),
     },
     loggedInAt: Date.now(),
-  });
+  })
 
-  return setResponseStatus(event, 201);
-});
+  return setResponseStatus(event, 201)
+})
