@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { loggedIn, clear } = useUserSession()
+const { loggedIn, clear, user } = useUserSession()
 
 const guest = () => {
   if (loggedIn.value) {
@@ -17,7 +17,10 @@ const guest = () => {
       <NuxtLink class="button" to="/member-one">會員一</NuxtLink>
       <NuxtLink class="button" to="/member-two">會員二</NuxtLink>
       <NuxtLink v-if="!loggedIn" class="button" to="/login">登入</NuxtLink>
-      <NuxtLink v-else class="button" @click="clear">登出</NuxtLink>
+      <template v-else>
+        <UAvatar :src="`${user?.avatar}.jpg`" />
+        <NuxtLink class="button" @click="clear">登出</NuxtLink>
+      </template>
     </div>
     <slot />
   </div>

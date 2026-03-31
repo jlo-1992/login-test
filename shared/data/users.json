@@ -4,13 +4,15 @@
     "email": "user01@gmail.com",
     "password": "12345678",
     "role": "user01",
-    "name": "user01"
+    "name": "user01",
+    "avatar": "images/users/user01.jpg"
   },
   {
     "id": 2,
     "email": "user02@gmail.com",
     "password": "12345678",
     "role": "user02",
-    "name": "user02"
+    "name": "user02",
+    "avatar": "images/users/user02.jpg"
   }
 ]

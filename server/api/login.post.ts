@@ -17,24 +17,24 @@ export default defineEventHandler(async (event) => {
   )
 
   // 輸入的資訊要符合使用者的
-  const foundUser = users.find(
+  const userData = users.find(
     (user) => user.email === email && user.password === password,
   )
 
-  if (!foundUser) {
+  if (!userData) {
     throw invalidCredentialsError
   }
 
   // 模擬取得 token
   const token = {
-    access_token: `mock-token-${foundUser.role}`,
+    access_token: `mock-token-${userData.role}`,
     expires_in: 3600,
-    refresh_token: `mock-refresh-token-${foundUser.role}`,
+    refresh_token: `mock-refresh-token-${userData.role}`,
   }
 
   // 把 user 資料寫入 session
   await setUserSession(event, {
-    user: { ...foundUser },
+    user: { ...userData },
     token: {
       accessToken: token.access_token,
       accessToken_expiredAt: getExpiredAt(token.expires_in),
