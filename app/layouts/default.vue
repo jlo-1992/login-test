@@ -6,6 +6,14 @@ const guest = () => {
     alert('此為訪客專屬頁面')
   }
 }
+
+const logout = async () => {
+  await $fetch('/api/logout', {
+    method: 'POST',
+  })
+
+  await clear()
+}
 </script>
 <template>
   <div>
@@ -18,8 +26,8 @@ const guest = () => {
       <NuxtLink class="button" to="/member-two">會員二</NuxtLink>
       <NuxtLink v-if="!loggedIn" class="button" to="/login">登入</NuxtLink>
       <template v-else>
-        <UAvatar :src="`${user?.avatar}.jpg`" />
-        <NuxtLink class="button" @click="clear">登出</NuxtLink>
+        <UAvatar :src="user?.avatar" />
+        <NuxtLink class="button" @click="logout">登出</NuxtLink>
       </template>
     </div>
     <slot />

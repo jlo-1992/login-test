@@ -2,11 +2,15 @@
 definePageMeta({
   // layout: false,
 })
+
+const { session } = useUserSession()
 </script>
 
 <template>
   <div class="flex h-150 flex-col items-center justify-center gap-y-3">
     <div>首頁</div>
+
+    {{ session?.token?.refreshToken }}
     <ol>
       <li>基礎登入功能</li>
       <li>頁面擋身份，導致首頁或登入頁</li>
