@@ -1,22 +1,14 @@
-<script setup lang="ts">
-definePageMeta({
-  // layout: false,
-})
-
-const { session } = useUserSession()
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <div class="flex h-150 flex-col items-center justify-center gap-y-3">
     <div>首頁</div>
 
-    {{ session?.token?.refreshToken }}
     <ol>
-      <li>基礎登入功能</li>
-      <li>頁面擋身份，導致首頁或登入頁</li>
-      <li>重整 refresh token</li>
-      <li>沒 token 重整自動登出，導至登入頁面</li>
-      <li>背景讀秒自動登出</li>
+      <li>1. 切換自動登出\登入</li>
+      <li>2. 切換重整或打api才會登入\登出</li>
+      <li>3. 背景讀秒，自動登出</li>
+      <li>4. 切換可在原視窗操作，直到換頁或打 api 才登出</li>
     </ol>
   </div>
 </template>
