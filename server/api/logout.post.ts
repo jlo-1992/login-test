@@ -7,6 +7,6 @@ export default defineEventHandler(async (event) => {
   // 清除 session 裡的使用者資料
   await clearUserSession(event)
 
-  setResponseStatus(event, 201)
+  setResponseStatus(event, 204)
   return send(event, null)
 })

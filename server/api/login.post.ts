@@ -35,6 +35,6 @@ export default defineEventHandler(async (event) => {
     loggedInAt: Date.now(),
   })
 
-  setResponseStatus(event, 201)
+  setResponseStatus(event, 204)
   return send(event, null)
 })
