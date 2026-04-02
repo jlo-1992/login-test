@@ -2,6 +2,12 @@
 import * as z from 'zod'
 import type { FormSubmitEvent } from '@nuxt/ui'
 
+definePageMeta({
+  middleware: 'guest',
+})
+
+const { fetch, user, session } = useUserSession()
+
 const schema = z.object({
   email: z.email('Invalid email'),
   password: z
@@ -28,11 +34,15 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     },
   })
     .then(async () => {
+      await fetch()
       toast.add({
         title: 'Success',
         description: 'The form has been submitted.',
         color: 'success',
       })
+      setTimeout(() => {
+        navigateTo('/')
+      }, 1000)
     })
     .catch((error) => {
       console.log(error)
@@ -48,6 +58,16 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
 <template>
   <div class="flex h-150 flex-col items-center justify-center gap-y-3">
+    <div>
+      {{ user?.role }}
+    </div>
+    <div>
+      {{ session?.token?.accessToken_time }}
+    </div>
+    <div>
+      {{ session?.token?.refreshToken_time }}
+    </div>
+
     <UForm
       ref="form"
       :schema="schema"
