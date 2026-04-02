@@ -11,9 +11,9 @@ export default eventHandler(async (event) => {
   }
   try {
     const token = {
-      accessToken: `session.token.accessToken-${session.user?.role}`,
+      accessToken: `router.accessToken-${session.user?.role}`,
       accessToken_time: expireFromNow(3000),
-      refreshToken: `session.token.refreshToken-${Math.random().toFixed(2)}`,
+      refreshToken: `router.refreshToken-${Math.random().toFixed(2)}`,
       refreshToken_time: expireFromNow(6000),
     }
 

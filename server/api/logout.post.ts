@@ -1,5 +1,5 @@
 export default defineEventHandler(async (event) => {
-  const session = getUserSession(event)
+  const session = await getUserSession(event)
 
   // 沒有使用者資料
   if (!session) return
