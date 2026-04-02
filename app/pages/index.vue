@@ -1,6 +1,13 @@
 <script setup lang="ts">
 const { session } = useUserSession()
-const { data, refresh } = await useFetch('/api/book')
+const { data, refresh } = await useFetch('/api/book', {
+  onResponseError({ response }) {
+    if (response.status === 401) {
+      // 這裡執行前端邏輯
+      navigateTo('/login')
+    }
+  },
+})
 </script>
 
 <template>

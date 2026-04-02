@@ -2,7 +2,9 @@ export default defineEventHandler(async (event) => {
   const session = await getUserSession(event)
 
   // 如果沒有 token，取消執行
-  if (!session.token) return
+  if (!session.token) {
+    throw createError({ status: 401, statusMessage: 'Unauthorized' })
+  }
 
   const books = [
     {
