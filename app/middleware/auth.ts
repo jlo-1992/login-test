@@ -3,6 +3,6 @@ export default defineNuxtRouteMiddleware(() => {
 
   // 沒有登入就導向登入頁面
   if (!loggedIn.value) {
-    navigateTo('/login')
+    return navigateTo('/login')
   }
 })

@@ -21,14 +21,14 @@ export default defineNuxtRouteMiddleware(async () => {
 
   // 如果兩個 token 都過期，直接登出
   if (isExpired(accessToken_time) && isExpired(refreshToken_time)) {
-    console.info('both tokens expired, clearing session')
+    console.log('both tokens expired, clearing session')
     await clear()
     return navigateTo('/login')
   }
 
   // 只有 access token 過期，更新 token
   else if (isExpired(accessToken_time)) {
-    console.info('access token expired, refreshing')
+    console.log('access token expired, refreshing')
     await useRequestFetch()('/api/refresh', {
       method: 'POST',
       onResponse({ response: { headers } }) {
