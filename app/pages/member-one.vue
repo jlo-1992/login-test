@@ -3,7 +3,18 @@ definePageMeta({
   middleware: 'auth',
 })
 
-const { data, refresh } = await useFetch('/api/book')
+// type Book = {
+//   id: string | number
+//   title: string
+// }
+
+// const { $api } = useNuxtApp()
+
+// const { data, refresh } = await useAsyncData<Book>('books', () =>
+//   $api('/api/book'),
+// )
+
+const { data, refresh } = await useFetchTwo('/api/book')
 </script>
 
 <template>
