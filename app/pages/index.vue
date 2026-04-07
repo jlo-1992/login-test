@@ -1,13 +1,5 @@
 <script setup lang="ts">
 const { session } = useUserSession()
-const { data, refresh } = await useFetch('/api/book', {
-  onResponseError({ response }) {
-    if (response.status === 401) {
-      // 這裡執行前端邏輯
-      navigateTo('/login')
-    }
-  },
-})
 </script>
 
 <template>
@@ -15,12 +7,6 @@ const { data, refresh } = await useFetch('/api/book', {
     <div>首頁</div>
 
     <ClientOnly>
-      <button class="cursor-pointer" @click="async () => await refresh()">
-        換憑證
-      </button>
-      <div>書代碼 {{ data?.id }}</div>
-      <div>書名 {{ data?.title }}</div>
-
       <div>現在時間 {{ Date.now() }}</div>
       <div>access_token {{ session?.token?.accessToken }}</div>
       <div>access_token_time {{ session?.token?.accessToken_time }}</div>

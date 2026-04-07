@@ -21,6 +21,10 @@ export default defineNuxtRouteMiddleware(async () => {
 
   // 如果兩個 token 都過期，直接登出
   if (isExpired(accessToken_time) && isExpired(refreshToken_time)) {
+    if (import.meta.client) {
+      const toast = useToast()
+      toast.add({ description: '連線逾時，請重新登入' })
+    }
     console.log('both tokens expired, clearing session')
     await clear()
     return navigateTo('/login')
