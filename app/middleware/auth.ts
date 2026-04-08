@@ -1,4 +1,4 @@
-export default defineNuxtRouteMiddleware(() => {
+export default defineNuxtRouteMiddleware((to) => {
   const { loggedIn } = useUserSession()
 
   // 沒有登入就導向登入頁面
@@ -7,6 +7,6 @@ export default defineNuxtRouteMiddleware(() => {
       const toast = useToast()
       toast.add({ description: '連線逾時，請重新登入' })
     }
-    return navigateTo('/login')
+    return navigateTo(`/login?redirectedFrom=${to.fullPath}`)
   }
 })

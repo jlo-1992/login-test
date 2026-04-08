@@ -6,7 +6,13 @@ definePageMeta({
   middleware: 'guest',
 })
 
-const { fetch, user, session } = useUserSession()
+const { fetch } = useUserSession()
+
+const route = useRoute()
+const redirectedFrom =
+  route.redirectedFrom?.fullPath || route.query.redirectedFrom?.toString()
+
+console.log(redirectedFrom)
 
 const schema = z.object({
   email: z.email('Invalid email'),
@@ -40,9 +46,8 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
         description: 'The form has been submitted.',
         color: 'success',
       })
-      setTimeout(() => {
-        navigateTo('/')
-      }, 1000)
+
+      navigateTo(redirectedFrom)
     })
     .catch((error) => {
       console.log(error)
@@ -58,16 +63,6 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
 
 <template>
   <div class="flex h-150 flex-col items-center justify-center gap-y-3">
-    <div>
-      {{ user?.role }}
-    </div>
-    <div>
-      {{ session?.token?.accessToken_time }}
-    </div>
-    <div>
-      {{ session?.token?.refreshToken_time }}
-    </div>
-
     <UForm
       ref="form"
       :schema="schema"

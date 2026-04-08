@@ -28,9 +28,11 @@ export default defineEventHandler(async (event) => {
     user: { ...user },
     token: {
       accessToken: `access-token-${user.role}`,
-      accessToken_time: expireFromNow(3000),
+      // 一週
+      accessToken_time: expireFromNow(7 * 86400),
       refreshToken: `refresh-token-${user.role}`,
-      refreshToken_time: expireFromNow(3000 * 2),
+      // 兩週
+      refreshToken_time: expireFromNow(7 * 86400 * 2),
     },
     loggedInAt: Date.now(),
   })

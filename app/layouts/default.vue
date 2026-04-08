@@ -1,5 +1,8 @@
 <script setup lang="ts">
+import CountDown from '~/components/CountDown.vue'
+
 const { loggedIn, user, clear } = useUserSession()
+const route = useRoute()
 
 const logout = async () => {
   await $fetch('/api/logout', {
@@ -12,14 +15,22 @@ const logout = async () => {
   <div>
     <div class="mt-2 flex justify-center gap-x-3">
       <NuxtLink class="button" to="/">回首頁</NuxtLink>
+      <NuxtLink class="button" to="/public">公開頁</NuxtLink>
       <NuxtLink class="button" to="/guest-only">訪客專屬頁</NuxtLink>
       <NuxtLink class="button" to="/member-one">會員一</NuxtLink>
       <NuxtLink class="button" to="/member-two">會員二</NuxtLink>
-      <NuxtLink v-if="!loggedIn" class="button" to="/login">登入</NuxtLink>
+      <NuxtLink
+        v-if="!loggedIn"
+        class="button"
+        :to="`/login?redirectedFrom=${route.path}`"
+      >
+        登入
+      </NuxtLink>
       <template v-else>
         <UAvatar :src="user?.avatar" />
         <button class="button" @click="logout">登出</button>
       </template>
+      <CountDown />
     </div>
     <slot />
   </div>
