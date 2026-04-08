@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import * as z from 'zod'
-import type { FormSubmitEvent } from '@nuxt/ui'
+import type { FormSubmitEvent, AuthFormField } from '@nuxt/ui'
 
 definePageMeta({
   middleware: 'guest',
@@ -12,7 +12,29 @@ const route = useRoute()
 const redirectedFrom =
   route.redirectedFrom?.fullPath || route.query.redirectedFrom?.toString()
 
-console.log(redirectedFrom)
+const fields: AuthFormField[] = [
+  {
+    name: 'email',
+    type: 'email',
+    label: 'Email',
+    defaultValue: 'user01@gmail.com',
+    placeholder: 'Enter your email',
+    required: true,
+  },
+  {
+    name: 'password',
+    label: 'Password',
+    type: 'password',
+    defaultValue: '12345678',
+    placeholder: 'Enter your password',
+    required: true,
+  },
+  {
+    name: 'remember',
+    label: 'Remember me',
+    type: 'checkbox',
+  },
+]
 
 const schema = z.object({
   email: z.email('Invalid email'),
@@ -21,22 +43,16 @@ const schema = z.object({
     .min(8, 'Must be at least 8 characters'),
 })
 
-const form = useTemplateRef('form')
 type Schema = z.output<typeof schema>
-
-const state = reactive<Partial<Schema>>({
-  email: 'user01@gmail.com',
-  password: '12345678',
-})
 
 const toast = useToast()
 
-async function onSubmit(event: FormSubmitEvent<Schema>) {
+async function onSubmit(payload: FormSubmitEvent<Schema>) {
   await $fetch('/api/login', {
     method: 'POST',
     body: {
-      email: event.data.email,
-      password: event.data.password,
+      email: payload.data.email,
+      password: payload.data.password,
     },
   })
     .then(async () => {
@@ -51,34 +67,46 @@ async function onSubmit(event: FormSubmitEvent<Schema>) {
     })
     .catch((error) => {
       console.log(error)
-      form.value?.setErrors([
-        {
-          name: 'email',
-          message: '帳號或密碼錯誤',
-        },
-      ])
     })
 }
 </script>
 
 <template>
-  <div class="flex h-150 flex-col items-center justify-center gap-y-3">
-    <UForm
-      ref="form"
-      :schema="schema"
-      :state="state"
-      class="space-y-4"
-      @submit="onSubmit"
-    >
-      <UFormField label="Email" name="email">
-        <UInput v-model="state.email" />
-      </UFormField>
-
-      <UFormField label="Password" name="password">
-        <UInput v-model="state.password" type="password" />
-      </UFormField>
-
-      <UButton type="submit">Submit</UButton>
-    </UForm>
+  <div class="mt-10 flex flex-col items-center justify-center gap-4 p-4">
+    <UPageCard class="w-full max-w-md">
+      <UAuthForm
+        :schema="schema"
+        :fields="fields"
+        title="Welcome back!"
+        icon="i-lucide-lock"
+        @submit="onSubmit"
+      >
+        <template #description>
+          Don't have an account?
+          <ULink to="#" class="font-medium text-primary">Sign up</ULink>
+          .
+        </template>
+        <template #password-hint>
+          <ULink to="#" class="font-medium text-primary" tabindex="-1">
+            Forgot password?
+          </ULink>
+        </template>
+        <!-- <template #validation>
+          <UAlert
+            color="error"
+            icon="i-lucide-info"
+            title="Error signing in"
+            description="123"
+          />
+        </template> -->
+        <template #footer>
+          By signing in, you agree to our
+          <ULink to="#" class="font-medium text-primary">
+            Terms of Service
+          </ULink>
+          .
+        </template>
+      </UAuthForm>
+    </UPageCard>
   </div>
 </template>
