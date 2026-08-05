@@ -1,15 +1,15 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-  compatibilityDate: "2025-07-15",
+  compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 
-  modules: ["@nuxt/eslint", "@nuxt/ui", "nuxt-auth-utils"],
+  modules: ['@nuxt/eslint', '@nuxt/ui', 'nuxt-auth-utils', 'nuxt-music-flow'],
 
-  css: ["~/assets/css/main.css"],
+  css: ['~/assets/css/main.css'],
 
   vite: {
     optimizeDeps: {
-      include: ["@vue/devtools-core", "@vue/devtools-kit", "zod"],
+      include: ['@vue/devtools-core', '@vue/devtools-kit', 'zod'],
     },
   },
-});
+})

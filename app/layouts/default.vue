@@ -11,6 +11,7 @@ const logout = async () => {
   await clear()
 }
 </script>
+
 <template>
   <div>
     <div class="mt-2 flex justify-center gap-x-3">
